@@ -12,12 +12,16 @@ module Tolk
       def load_translations
         I18n.available_locales # force load
         translations = flat_hash(I18n.backend.send(:translations)[primary_locale.name.to_sym])
-        filter_out_i18n_keys(translations.merge(read_primary_locale_file))
+        filter_out_i18n_keys(translations.merge(read_primary_locale_files))
       end
 
-      def read_primary_locale_file
-        primary_file = "#{self.locales_config_path}/#{self.primary_locale_name}.yml"
-        File.exists?(primary_file) ? flat_hash(YAML::load(IO.read(primary_file))[self.primary_locale_name]) : {}
+      def read_primary_locale_files
+        primary_files = Dir.glob("#{self.locales_config_path}/**/#{self.primary_locale_name}.yml")
+        translations = {}
+        primary_files.each do |primary_file|
+          translations.merge(flat_hash(YAML::load(IO.read(primary_file))[self.primary_locale_name]))
+        end
+        translations
       end
 
       def flat_hash(data, prefix = '', result = {})
