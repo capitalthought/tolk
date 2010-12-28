@@ -15,31 +15,35 @@ class TranslationProcessTest < ActionController::IntegrationTest
 
     # Adding a new translation
     pirate_url = tolk_locale_url(locale)
-    visit pirate_url
-    fill_in 'translations[][text]', :with => "Dead men don't bite"
-    click_button 'Save changes'
+    @session.visit pirate_url
+    @session.fill_in 'translations[][text]', :with => "Dead men don't bite"
+    @session.click_button 'Save changes'
 
-    assert_equal current_url, pirate_url
+    assert_equal @session.current_url, pirate_url
     assert_equal 1, locale.translations.count
 
     # Updating the translation added above
-    click_link 'See completed translations'
+    @session.click_link 'See completed translations'
     assert_contain "Dead men don't bite"
 
-    fill_in 'translations[][text]', :with => "Arrrr!"
-    click_button 'Save changes'
+    @session.fill_in 'translations[][text]', :with => "Arrrr!"
+    @session.click_button 'Save changes'
 
-    assert_equal current_url, all_tolk_locale_url(locale)
+    assert_equal @session.current_url, all_tolk_locale_url(locale)
     assert_equal 1, locale.translations.count
     assert_equal 'Arrrr!', locale.translations(true).first.text
   end
 
   private
+  
+  def tolk_root_path
+    "/tolk"
+  end
 
   def add_locale(name)
-    visit tolk_root_path
-    select name
-    click_button 'Add'
+    @session.visit tolk_root_path
+    @session.select name
+    @session.click_button 'Add'
 
     Tolk::Locale.find_by_name!(Tolk::Locale::MAPPING.index(name))
   end

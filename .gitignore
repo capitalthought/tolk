@@ -1,1 +1,3 @@
 tmp/**/*
+.rvmrc
+vendor/bundler
