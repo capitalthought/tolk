@@ -45,7 +45,7 @@ class TranslationProcessTest < ActionController::IntegrationTest
     @session.select name
     @session.click_button 'Add'
 
-    Tolk::Locale.find_by_name!(Tolk::Locale::MAPPING.index(name))
+    Tolk::Locale.find_by_name!(Tolk::Locale::MAPPING.key(name))
   end
 
   def setup_locales

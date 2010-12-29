@@ -19,7 +19,7 @@ module Tolk
         primary_files = Dir.glob("#{self.locales_config_path}/**/#{self.primary_locale_name}.yml")
         translations = {}
         primary_files.each do |primary_file|
-          translations.merge(flat_hash(YAML::load(IO.read(primary_file))[self.primary_locale_name]))
+          translations.merge!(flat_hash(YAML::load(IO.read(primary_file))[self.primary_locale_name]))
         end
         translations
       end

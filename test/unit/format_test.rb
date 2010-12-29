@@ -7,7 +7,7 @@ class FormatTest < ActiveSupport::TestCase
     Tolk::Translation.delete_all
     Tolk::Phrase.delete_all
 
-    Tolk::Locale.locales_config_path = RAILS_ROOT + "/test/locales/formats/"
+    Tolk::Locale.locales_config_path = Rails.root.to_s + "/test/locales/formats/"
 
     I18n.backend.reload!
     I18n.load_path = [Tolk::Locale.locales_config_path + 'en.yml']

@@ -7,9 +7,9 @@ module Tolk
     module ClassMethods
 
       def import_secondary_locales
-        locales = Dir.glob("#{self.locales_config_path}/**/#{self.primary_locale_name}.yml")
-        locales = locales.reject {|l| ['.', '..'].include?(l) || !l.ends_with?('.yml') }.map {|x| x.split('.').first }.uniq - [Tolk::Locale.primary_locale.name]
-
+        locales = Dir.glob("#{self.locales_config_path}/**/*.yml")
+        puts locales.inspect
+        locales = locales.reject {|l| ['.', '..'].include?(l) || !l.ends_with?('.yml') }.map {|x| x.split('.').first.split('/').last }.uniq - [Tolk::Locale.primary_locale.name]
         locales.each {|l| import_locale(l) }
       end
 
@@ -40,7 +40,7 @@ module Tolk
       locale_files = Dir.glob("#{self.locales_config_path}/**/#{self.name}.yml")
       translations = {}
       locale_files.each do |locale_file|
-        translations.merge(self.class.flat_hash(YAML::load(IO.read(locale_file))[self.name]))
+        translations.merge!(self.class.flat_hash(YAML::load(IO.read(locale_file))[self.name]))
       end
       translations
     end

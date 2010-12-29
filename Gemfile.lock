@@ -13,6 +13,13 @@ GIT
   specs:
     will_paginate (3.0.pre3)
 
+PATH
+  remote: .
+  specs:
+    tolk (1.0.1)
+      will_paginate (>= 3.0.pre)
+      ya2yaml (~> 0.26)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -112,5 +119,6 @@ DEPENDENCIES
   mocha!
   rails (>= 3.0)
   sqlite3
+  tolk!
   will_paginate!
   ya2yaml
