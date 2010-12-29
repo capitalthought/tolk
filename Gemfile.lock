@@ -17,7 +17,7 @@ PATH
   remote: .
   specs:
     tolk (1.0.1)
-      will_paginate (>= 3.0.pre)
+      will_paginate (>= 3.0.pre3)
       ya2yaml (~> 0.26)
 
 GEM
