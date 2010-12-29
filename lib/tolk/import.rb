@@ -7,15 +7,15 @@ module Tolk
     module ClassMethods
 
       def import_secondary_locales
-        locales = Dir.entries(self.locales_config_path)
-        locales = locales.reject {|l| ['.', '..'].include?(l) || !l.ends_with?('.yml') }.map {|x| x.split('.').first } - [Tolk::Locale.primary_locale.name]
+        locales = Dir.glob("#{self.locales_config_path}/**/#{self.primary_locale_name}.yml")
+        locales = locales.reject {|l| ['.', '..'].include?(l) || !l.ends_with?('.yml') }.map {|x| x.split('.').first }.uniq - [Tolk::Locale.primary_locale.name]
 
         locales.each {|l| import_locale(l) }
       end
 
       def import_locale(locale_name)
         locale = Tolk::Locale.find_or_create_by_name(locale_name)
-        data = locale.read_locale_file
+        data = locale.read_locale_files
 
         phrases = Tolk::Phrase.all
         count = 0
@@ -36,11 +36,13 @@ module Tolk
 
     end
 
-    def read_locale_file
-      locale_file = "#{self.locales_config_path}/#{self.name}.yml"
-      raise "Locale file #{locale_file} does not exists" unless File.exists?(locale_file)
-
-      self.class.flat_hash(YAML::load(IO.read(locale_file))[self.name])
+    def read_locale_files
+      locale_files = Dir.glob("#{self.locales_config_path}/**/#{self.name}.yml")
+      translations = {}
+      locale_files.each do |locale_file|
+        translations.merge(self.class.flat_hash(YAML::load(IO.read(locale_file))[self.name]))
+      end
+      translations
     end
 
   end
